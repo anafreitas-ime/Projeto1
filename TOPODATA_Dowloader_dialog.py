@@ -26,6 +26,13 @@ import os
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
+from qgis.core import QgsMessageLog
+from .DOWLOADER import Downloader, buscar_href_altitude
+from .quadriculas_zn import QUADRICULAS_ZN
+from .LAYERLOADER import LayerLoader
+from qgis.PyQt.QtWidgets import QLabel, QVBoxLayout
+from qgis.PyQt.QtGui import QPixmap
+
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(
@@ -46,3 +53,40 @@ class TOPODATADowloaderDialog(QtWidgets.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+
+        self.pushButton.clicked.connect(self.botaoparadowload)
+        self.pushButton_2.clicked.connect(self.botaoparaabrirmapaindice)
+
+
+        self.listWidget.clear()
+        for codigo in QUADRICULAS_ZN:
+            self.listWidget.addItem(codigo)
+
+    def botaoparadowload(self):
+        QgsMessageLog.logMessage("Arquivo Baixado", "Plugin")
+
+        quadricula = self.listWidget.currentItem().text()
+
+        href = buscar_href_altitude(quadricula)
+        print("Link encontrado:", href)
+
+        obj_teste = LayerLoader(href, self.mQgsFileWidget.filePath())
+        obj_teste.download_raster_layer(quadricula + "ZN", progress_callback=self.progressBar.setValue)
+
+    def botaoparaabrirmapaindice(self):
+            QgsMessageLog.logMessage("Mapa Índice aberto", "Plugin")
+
+            caminho_imagem = os.path.join(os.path.dirname(__file__), "mapaindice.jpg")
+
+            janela_mapa = QtWidgets.QDialog(self)
+            janela_mapa.setWindowTitle("Mapa Índice - TOPODATA")
+
+            label_imagem = QLabel()
+            pixmap = QPixmap(caminho_imagem)
+            label_imagem.setPixmap(pixmap)
+
+            layout = QVBoxLayout()
+            layout.addWidget(label_imagem)
+            janela_mapa.setLayout(layout)
+
+            janela_mapa.exec_()

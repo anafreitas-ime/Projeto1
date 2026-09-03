@@ -23,7 +23,7 @@
          <item>
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>Arquivos disponíveis</string>
+            <string>Quadrículas disponíveis</string>
            </property>
           </widget>
          </item>
@@ -70,12 +70,16 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Servidor</string>
+          <string>Relação da numeração das quadrículas:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="text">
+          <string>Mapa Índice</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -98,6 +102,13 @@
         <widget class="QPushButton" name="pushButton">
          <property name="text">
           <string>Baixar</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QProgressBar" name="progressBar">
+         <property name="value">
+          <number>0</number>
          </property>
         </widget>
        </item>
